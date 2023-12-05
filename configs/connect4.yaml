@@ -1,0 +1,39 @@
+env:
+  _target_: src.envs.connect4_env.Connect4Env
+  lambd: 10
+
+model:
+  _target_: src.models.az_resnet.AZResNet
+  res_filters: 128
+  res_layers: 10
+  head_filters: 32
+
+optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-3
+  lr_Z_0: 5e-2
+
+buffer:
+  _target_: src.data.TrajectoryBuffer
+  max_capacity: 250_000
+
+wandb:
+  _target_: wandb.init
+  project: AFN
+  tags: [Connect4]
+  mode: disabled
+
+# Needs about 19GB of VRAM during training
+training:
+  batch_size: 1024
+  total_steps: 25_000
+  eval_every: 500
+
+  # Buffer
+  buffer_batch_size: 1024
+  num_initial_traj: 250_000
+  num_regen_traj: 10_000
+  regen_every: 250
+
+  # Checkpoint
+  ckpt_dir: checkpoints-Connect4

@@ -1,0 +1,40 @@
+env:
+  _target_: src.envs.tictactoe_env.TicTacToeEnv
+  lambd: 10 # Determines the log reward for outcomes (lambda for win, 0 for draw, -lambda for loss)
+
+# Architecture hyperparameters
+model:
+  _target_: src.models.az_resnet.AZResNet
+  res_filters: 32 # Number of filters in residual layers
+  res_layers: 3 # Number of residual layers
+  head_filters: 32
+
+optimizer:
+  _target_: torch.optim.Adam
+  lr: 1e-3
+  lr_Z_0: 5e-2 # Separate LR for the Z parameter
+
+buffer:
+  _target_: src.data.TrajectoryBuffer
+  max_capacity: 25_000 # Maximum number of trajectories (i.e. games in buffer)
+
+# Wandb settings
+wandb:
+  _target_: wandb.init
+  project: AFN
+  tags: [TicTacToe]
+  mode: disabled # Whether to use wandb
+
+training:
+  batch_size: 512 # Training batch size
+  total_steps: 1000 # Number of optimization steps to train for
+  eval_every: 100 # Number of optimization steps before evaluation
+
+  # Buffer
+  buffer_batch_size: 1000 # Batch size for generating trajectories (i.e. there are `buffer_batch_size` environments that are played in parallel)
+  num_initial_traj: 5000 # Number of initial trajectories to populate the buffer
+  num_regen_traj: 2500 # Number of trajectories to generate each `regen_every`
+  regen_every: 250 # Number of optimization steps before generating new trajectories
+
+  # Checkpoint
+  ckpt_dir: checkpoints-TTT
