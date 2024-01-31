@@ -34,7 +34,7 @@ nvidia-nvjitlink-cu12==12.3.101
 nvidia-nvtx-cu12==12.1.105
 omegaconf==2.3.0
 packaging==23.2
-Pillow==10.1.0
+Pillow==10.2.0
 protobuf==4.25.1
 psutil==5.9.6
 pyparsing==3.1.1
